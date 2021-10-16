@@ -1,0 +1,134 @@
+                              MILESTONE ANSWERS
+Ans1-
+1.	class Solution {
+2.	public:
+3.	    int numJewelsInStones(string jewels, string stones){
+4.	        int cnt=0;
+5.	        for(char ch: S.ticharArray()){
+6.	            if(J.indexOf(ch)!=-1)cnt++;
+7.	        }
+8.	        return cnt;
+9.	    }
+10.	}
+                                                                                                                               
+Ans 2-
+1.       class Solution {
+2.     public:
+3.    string mergeAlternately(string word1, string word2) {
+4.        int firstLenght=word1.length();
+5.        int secondLength=word2.length(); 
+ 6.       int i=0;
+ 7.       int j=0;
+ 8.       StringBuilder finalResult= new StringBuilder();
+ 9.       while(i<firstLength||j<secondLength)
+ 10.          if (i<firstLength)
+       11.         finalResult.append(word2.charAt(j++));
+       12.         }
+       13.       }
+        14.   return finalResult.toString();
+        15.
+         16.
+         17.    }
+         18. }
+
+Ans 3-
+1.    class Solution {
+2.   public:
+3.   int minSteps(string s, string t) {
+4.        unordered_map<int,int>f;
+5.        int ans=0;
+6.        for(char &c : s){
+7.            f[c- 'a']++;
+8.        }
+ 9.       
+10.        for(auto &c : t) {
+ 11.           f[c -'a']--;
+  12.      }
+  13.      
+   14.     for(auto &c : f){
+  15.          if(c.second !=0)
+   16.             ans++ ;
+   17.     }
+    18.    
+    19.    return ans / 2;
+    20.       }   
+    21.    
+    22.     int main() {
+    23.      string s= "beb" , t="aba" ;
+    24.       cout<<minSteps(s , t)<<endl;
+    25.         return 0;
+    26.    
+    27.            }
+     28.       };  
+
+Ans 4.
+class Solution {
+public:
+ vector<int> spiralOrder(vector<vector<int>>& matrix) {
+  vector<int> spiralOrder(vector<vector<int> >{
+       vector<int> result;
+       if(matrix.empty()) return result;
+       int xBeg=0,xEnd=matrix.size()-1;
+       int yBeg=0,yEnd=matrix[0].size()-1;
+      while(true){
+           for(int i=yBeg;i<=yEnd;i++)
+result.push_back(matrix[xBeg][i]);
+           if(++xBeg>xEnd) break;
+           for(int i=xBeg;i<=xEnd;i++) 
+ result.push_back(matrix[i][yEnd]);
+           if(--yEnd<yBeg) break;
+            for(int i=yEnd;i>=yBeg;i--) result.push_back(matrix[xEnd][i]);
+            if(--xEnd<xBeg) break;
+            for(int i=xEnd;i>=xBeg;i--) result.push_back(matrix[i][yBeg]);
+            if(++yBeg>yEnd) break;
+        }
+        return result;
+    }
+};
+
+Ans 6.
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+   int maxProfit = 0;
+  int minPrice = prices[0];
+  for(int i=1; i<l; i++) {
+    maxProfit = Math.max(maxProfit, prices[i]-minPrice);
+    minPrice = Math.min(minPrice, prices[i]);
+  }
+
+  return maxProfit;
+}
+     
+    }
+}
+
+Ans 7.
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+         int n = p.length;
+        
+        int[]  q = new int[n-1];
+        
+        int i=0,s=0;
+        
+        while(i!=n-1)
+        {
+            q[i] = p[i+1]-p[i];
+            i++;
+        }
+        int j=0
+        while(j != n-1)
+        {
+            if(q[j]>0)
+            {
+                s+=q[j];
+            }
+            j++;
+        }
+        return s;
+    }
+}        
+    }
+};
