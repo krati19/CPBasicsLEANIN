@@ -1,0 +1,310 @@
+MILESTONE 3
+Q1. https://leetcode.com/problems/reorder-list/
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public void reorderList(ListNode head) {
+        //store nodes in a list
+        List<ListNode>list = new ArrayList<>();
+        
+        ListNode dummy=head;//dummy pointer to traverse the linkedlist
+        while(dummy!=null){
+            list.add(dummy);
+            dummy=dummy.next;
+        }
+        
+        //capture start and end indices
+        int i=0,j=list.size()-1;
+        
+        ListNode temp = new ListNode(0);//temp node to adjust next pointers
+        while(i<j){
+            temp=list.get(i).next;
+            list.get(i).next=list.get(j);
+            list.get(j).next=temp;
+            
+            i++;
+            j--;
+        }
+        temp.next=null; //terminate Linked List
+ 
+    }
+}
+
+Q2. https://leetcode.com/problems/min-stack/
+ int[] arr;
+    int[] minArr;
+    int top;
+
+    public MinStack() {
+        
+        arr = new int[30000];
+        minArr = new int[30000];
+        top = -1;
+    }
+    
+    public void push(int val) {
+        arr[++top] = val;
+        if(top == 0 || minArr[top-1] > val){
+            minArr[top] = val;
+        }else{
+            minArr[top] = minArr[top-1];
+        }
+    }
+    
+    public void pop() {
+        
+        if(top >= 0){
+          top--;
+        } 
+    }
+    
+    public int top() {
+        return arr[top];
+    }
+    
+    public int getMin() {
+        return minArr[top];
+    }
+}
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack obj = new MinStack();
+ * obj.push(val);
+ * obj.pop();
+ * int param_3 = obj.top();
+ * int param_4 = obj.getMin();
+ */
+
+Q3. https://leetcode.com/problems/implement-stack-using-queues
+class MyStack {
+
+    private final Queue<Integer> master = new LinkedList<>();
+    private Integer lastElement;
+
+    public void push(final int x) {
+        master.add(x);
+        lastElement = x;
+    }
+
+    public int pop() {
+        final Queue<Integer> slave = new LinkedList<>();
+        while (master.size() > 1) {
+            lastElement = master.remove();
+            slave.add(lastElement);
+        }
+        final int result = master.remove();
+        for (final int element:  slave) {
+            master.add(element);
+        }
+        return result;
+    }
+
+    public int top() {
+        return lastElement;
+    }
+
+    public boolean empty() {
+        return master.isEmpty();
+    }
+}
+/**
+ * Your MyStack object will be instantiated and called as such:
+ * MyStack obj = new MyStack();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * int param_3 = obj.top();
+ * boolean param_4 = obj.empty();
+ */
+
+Q4. https://leetcode.com/problems/implement-queue-using-stacks/
+class MyQueue {
+    int front;
+    Stack<Integer> stack1;
+    Stack<Integer> stack2;
+    public MyQueue() {
+        this.stack1 = new Stack<>();
+        this.stack2 = new Stack<>();
+    }
+    
+    public void push(int x) {
+        if (stack1.isEmpty()){
+            this.front = x;
+        }
+        stack1.push(x);
+    }
+    
+    public int pop() {
+        while (!stack1.isEmpty()){
+            stack2.push(stack1.pop());
+        }
+        int toReturn = stack2.pop();
+        if (!stack2.isEmpty()){
+                front = stack2.peek();
+        }
+        while (!stack2.isEmpty()){
+            stack1.push(stack2.pop());
+        }
+        return toReturn;
+    }
+    
+    public int peek() {
+        return front;
+    }
+    
+    public boolean empty() {
+        if (stack1.isEmpty()){
+            return true;
+        }
+        return false;
+    }
+}
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * MyQueue obj = new MyQueue();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * int param_3 = obj.peek();
+ * boolean param_4 = obj.empty();
+ */
+
+Q5. https://leetcode.com/problems/merge-two-sorted-lists
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if(l1 == null && l2 == null)
+        {
+            return null;
+        }
+        else if (l1 == null && l2 != null)
+        {
+            return l2;
+        }
+        else if (l1 != null && l2 == null)
+        {
+            return l1;
+        }
+        else
+        {
+            ListNode pointer1 = l1;
+            ListNode pointer2 = l2;
+            ListNode result =new ListNode();
+            ListNode end;
+            if(pointer1.val <= pointer2.val)
+            {
+                result = pointer1;
+                pointer1 = pointer1.next;
+                result.next = null;
+                end = result;
+            }
+            else
+            {
+                result = pointer2;
+                pointer2 = pointer2.next;
+                result.next = null;
+                end = result;
+            }
+            while(pointer1 != null && pointer2 != null)
+            {
+                if(pointer1.val <= pointer2.val)
+                {
+                    end.next = pointer1;
+                    pointer1 = pointer1.next;
+                    end = end.next;
+                    end.next = null;
+                                  
+                }
+                else
+                {
+                    end.next = pointer2;
+                    pointer2 = pointer2.next;
+                    end = end.next;
+                    end.next = null;
+                }
+            }
+            if(pointer1 ==null)
+            {
+                end.next = pointer2;
+            }
+            else
+            {
+                end.next = pointer1;
+            }
+            return result;
+            
+        }
+    }
+}
+
+Q6. https://leetcode.com/problems/linked-list-cycle
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) {
+                break;
+            }
+        }
+        
+        if (fast == null || fast.next == null) {
+            return false;
+        }
+        
+        return true;
+    }
+}
+
+Q7. https://leetcode.com/problems/subarray-product-less-than-k
+class Solution {
+    public int numSubarrayProductLessThanK(int[] nums, int k) {
+        if(k <= 1) return 0;
+        int pro = 1;
+        int result = 0;
+        
+        int left = 0;
+        int right = 0;
+        while(right < nums.length){     //if we multiply current element
+            pro *= nums[right];         //then multiply it
+            while(pro >= k){   //if we reach the limit, divide until becomes valid again
+                pro /= nums[left];
+                left++;
+            }
+            
+            result += right - left + 1;
+            right++;
+        }
+        return result;
+    }
+}
