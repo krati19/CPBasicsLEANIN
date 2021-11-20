@@ -1,0 +1,337 @@
+ANANYA SINGH- MILESTONE 3
+
+
+
+Q1. https://leetcode.com/problems/reorder-list/
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+
+class Solution {
+    public void reorderList(ListNode head) {
+        if(head==null || head.next==null) return;
+        
+        ListNode l1=head;
+        ListNode slow=head;
+        ListNode fast= head;
+        ListNode prev = null;
+        while(fast!=null && fast.next!=null){
+            prev=slow;
+            slow= slow.next;
+            fast= fast.next.next;
+        }
+        prev.next=null;
+        ListNode l2= reverse(slow);
+        merge(l1,l2);
+    
+    }
+    static ListNode reverse(ListNode head){
+        ListNode curr=head;
+        ListNode prev=null;
+        while(curr!=null){
+            ListNode temp=curr.next;
+            curr.next=prev;
+            prev=curr;
+            curr=temp;
+        }
+        return prev;
+    }
+    static void merge(ListNode l1,ListNode l2){
+        while(l1!=null){
+            ListNode l1_next = l1.next;
+            ListNode l2_next = l2.next;
+            l1.next=l2;
+            if(l1_next==null) break;
+            l2.next=l1_next;
+            l1=l1_next;
+            l2=l2_next;
+        }        
+    }
+}
+
+
+
+
+Q2. https://leetcode.com/problems/min-stack/
+
+class MinStack {
+
+    Stack<Integer> stk = new Stack<>();
+    Stack<Integer> stk2 = new Stack<>();
+    
+    public void push(int x) {
+        stk.push(x);                             
+        if(stk2.isEmpty() || x <= stk2.peek())   
+            stk2.push(x);
+    }
+    
+    public void pop() {
+        if(stk.pop().equals(stk2.peek()))    
+            stk2.pop();                      
+    }
+    
+    public int top() {
+        return stk.peek();
+    }
+    
+    public int getMin() {
+        return stk2.peek();
+    }
+}
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack obj = new MinStack();
+ * obj.push(val);
+ * obj.pop();
+ * int param_3 = obj.top();
+ * int param_4 = obj.getMin();
+ */
+
+
+
+
+Q3. https://leetcode.com/problems/implement-stack-using-queues
+
+  class MyStack {
+    
+    Queue<Integer> mainQ;
+    Queue<Integer> helperQ;
+
+    public MyStack() {
+        
+        mainQ=new ArrayDeque<>();
+        helperQ=new ArrayDeque<>();
+    }
+    
+    public void push(int x) {
+       mainQ.add(x);
+    }
+    
+    public int pop() {
+        if(mainQ.size()==0)
+        {
+            return -1;
+        }
+        
+        while(mainQ.size()!=1)
+        {
+            helperQ.add(mainQ.remove());
+        }
+        
+        int val=mainQ.remove();
+        mainQ=helperQ;
+        helperQ=new ArrayDeque<>();
+        return val;
+    }
+    
+    public int top() {
+        if(mainQ.size()==0)
+        {
+            return -1;
+        }
+        
+        while(mainQ.size()!=1)
+        {
+            helperQ.add(mainQ.remove());
+        }
+    
+        int val=mainQ.remove();
+        helperQ.add(val);   
+        mainQ=helperQ;
+        helperQ=new ArrayDeque<>();
+        return val;
+     }
+    
+    public boolean empty() {
+        return mainQ.isEmpty();
+    }
+}
+
+/**
+ * Your MyStack object will be instantiated and called as such:
+ * MyStack obj = new MyStack();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * int param_3 = obj.top();
+ * boolean param_4 = obj.empty();
+ */
+
+
+
+
+Q4. https://leetcode.com/problems/implement-queue-using-stacks
+
+class MyQueue {
+    
+    Stack<Integer> mainS;
+    Stack<Integer> helperS;
+
+    public MyQueue() {
+        mainS=new Stack<>();
+        helperS=new Stack<>();
+    }
+    
+    public void push(int x) {
+        mainS.push(x);
+    }
+    
+    public int pop() {
+        
+        if(mainS.size()==0)
+        {
+            return -1;
+        }
+        while(mainS.size()!=1)
+        {
+            helperS.push(mainS.pop());
+        }
+        
+        int val=mainS.pop();
+        
+        while(helperS.size()>0)
+        {
+            mainS.push(helperS.pop());
+        }
+        return val;
+    }
+    
+    public int peek() {
+        
+        if(mainS.size()==0)
+        {
+            return -1;
+        }
+        
+        while(mainS.size()!=1)
+        {
+            helperS.push(mainS.pop());
+        }
+        
+        int val=mainS.peek();
+        
+        while(helperS.size()>0)
+        {
+            mainS.push(helperS.pop());
+        }
+        return val;
+    }
+    
+    public boolean empty() {
+        
+        return mainS.isEmpty();
+    }
+}
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * MyQueue obj = new MyQueue();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * int param_3 = obj.peek();
+ * boolean param_4 = obj.empty();
+ */ 
+
+
+
+
+Q5. https://leetcode.com/problems/merge-two-sorted-lists
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+    if(l1==null) return l2;
+    if(l2==null) return l1;
+
+    if(l1.val<=l2.val){
+        l1.next=mergeTwoLists(l1.next, l2);
+        return l1;
+    } 
+    else {
+        l2.next=mergeTwoLists(l1, l2.next);
+        return l2;
+    }
+  }
+}
+
+
+
+
+Q6. https://leetcode.com/problems/linked-list-cycle
+
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        if(head==null || head.next==null){
+            return false;
+ }
+        ListNode slow = head;
+        head=head.next;
+        while(head!=null &&  head.next!=null){
+            if(slow==head){
+               return true; 
+            }
+            slow=slow.next;
+            head=head.next.next;
+        }
+        return false;
+    }
+}
+
+
+
+
+Q7. https://leetcode.com/problems/subarray-product-less-than-k
+
+class Solution {
+    public int numSubarrayProductLessThanK(int[] arr, int k) {
+        int n=arr.length;
+        int count=0;
+		if(k<=1)
+			return 0;
+		int prod=1;
+		int start=0;
+		int end=0;
+		while(end<n)
+		{
+			prod=prod*arr[end];
+			while(prod >= k)
+			{
+				prod=prod/arr[start];
+				start++;
+			}
+			count=count+end-start+1;
+			end++;
+		}
+		return count;
+    }
+}
