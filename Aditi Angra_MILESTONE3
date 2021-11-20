@@ -1,0 +1,245 @@
+Reorder List:
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    void reorderList(ListNode* head) {
+        if(head==NULL || head->next==NULL || head->next->next==NULL)
+        {
+            return ;
+        }
+        ListNode * slow=head;
+        ListNode* fast=head;
+        stack<ListNode*>s;
+        while(fast!=NULL && fast->next!=NULL)
+        {
+            slow=slow->next;  // 3
+            fast=fast->next->next; //5
+        }
+        ListNode* middle=slow;  //3
+        slow=slow->next;   //4
+        middle->next=NULL;  // 3->NULL
+        while(slow!=NULL)
+        {
+            s.push(slow);  // stack me push
+            slow=slow->next;
+        }
+        slow=head;   // 1
+        while(s.empty()==false)
+        {
+            fast=head->next;  
+            head->next=s.top();
+            s.pop();
+            head=head->next;
+            head->next=fast;
+            head=fast;
+        }
+    }
+    
+};
+
+2..Min Stack
+class MinStack {
+public:
+    vector< pair<int,int> > s;
+	
+    MinStack() { }
+    
+    void push(int val) {
+        if(s.empty())
+            s.push_back({val,val});
+        else
+            s.push_back({val,min(s.back().second,val)});    
+    }
+    
+    void pop() { s.pop_back(); }
+    
+    int top() { return s.back().first; }
+    
+    int getMin() { return s.back().second; }
+};
+3...Implement stack using queues
+class MyStack {
+public:
+    /** Initialize your data structure here. */
+    queue<int> q1;
+    queue<int> q2;
+    MyStack() {
+        
+    }
+    
+    /** Push element x onto stack. */
+    void push(int x) {
+        q2.push(x);
+        while(!q1.empty()){
+            q2.push(q1.front());    q1.pop();
+        }
+        swap(q1, q2);
+    }
+    
+    /** Removes the element on top of the stack and returns that element. */
+    int pop() {
+        int result = top();
+        q1.pop();
+        return result;
+    }
+    
+    /** Get the top element. */
+    int top() {
+        return q1.front();
+    }
+    
+    /** Returns whether the stack is empty. */
+    bool empty() {
+        return q1.empty();
+    }
+};
+4..Implement queue using stacks
+class MyQueue {
+public:
+    stack<int> s1;
+    stack<int> s2;
+    /** Initialize your data structure here. */
+    MyQueue() {
+        
+    }
+    
+    /** Push element x to the back of queue. */
+    void push(int x) {
+        while(!s1.empty()) {
+            s2.push(s1.top());
+            s1.pop();
+        }
+        s2.push(x);
+        while(!s2.empty()) {
+            s1.push(s2.top());
+            s2.pop();
+        }
+    }
+    
+    /** Removes the element from in front of queue and returns that element. */
+    int pop() {
+        int curr = s1.top();
+        s1.pop();
+        return curr;
+    }
+    
+    /** Get the front element. */
+    int peek() {
+        return s1.top();
+    }
+    
+    /** Returns whether the queue is empty. */
+    bool empty() {
+        return s1.empty();
+    }
+};
+5..Merge two sorted lists
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        if(l1==NULL)
+        {
+            return l2;
+        }
+        if(l2==NULL)
+        {
+            return l1;
+        }
+        ListNode *dummy=new ListNode(0);
+        ListNode *p3=dummy;
+        while(l1!=NULL && l2!=NULL)
+        {
+            if(l1->val<=l2->val)
+            {
+                p3->next=l1;
+                l1=l1->next;
+            }
+            else
+            {
+                p3->next=l2;
+                l2=l2->next;
+            }
+            p3=p3->next;
+        }
+        if(l1!=NULL)
+        {
+            p3->next=l1;
+        }
+        else
+        {
+            p3->next=l2;
+        }
+        return dummy->next;
+    }
+};
+6..Linked List Cycle
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        ListNode *slow=head;
+        ListNode *fast=head;
+            while(slow && fast && fast->next)
+            {
+                slow=slow->next;
+                fast=fast->next->next;
+                if(slow==fast)
+                {
+                    return true;
+                }
+            }
+        return false;
+    }
+};
+7..Subarray product less than K
+int numSubarrayProductLessThanK(vector<int>& nums, int k) {
+		
+		// as all numbers in the array are positive
+        if(k <= 1) return 0;
+        
+		// initialize some vars
+        int prod = 1, res = 0, left = 0;
+        
+		// traversing through each window
+        for(int right = 0; right < nums.size(); right++) {
+			
+			// store the product of elements which we see new in window 
+            prod *= nums[right];
+    
+			// if product is greater than the given k 
+			// then slide the window by doing left++ and dividing prod by nums[left] 
+            while(prod >= k) {
+                prod /= nums[left];
+                left++;
+            }
+			
+			// this res will have number of subarrays(windows) possible
+			/* I/p: [ 10, 5, 2, 6 ], k = 100
+				
+				right = left = 0;
+				prod = prod * 10 = 10; 
+				res = res + 0 - 0 + 1 = 1;  // subarrays - [ 10 ]
+				
+				right = 1;
+				prod = prod * 5 = 10 * 5 = 50
+				res = res + 1 - 0 + 1 = 1 + 1 - 0 + 1 = 3; // subarrays - [ 10 ], [ 5 ], [ 10, 5 ]
+				
+				right = 2;
+				prod = prod * 2 = 50 * 2 = 100;
+				prod > k;
+				prod = prod / nums[left] = prod / nums[0] = 100 / 10 = 10;
+				left++;
+				res = res + 2 - 1 + 1 = 3 + 2 = 5; // subarrays - [ 10 ], [ 5 ], [ 10, 5 ], [ 2 ], [ 5, 2 ] 
+			*/
+            res += right - left + 1;
+        }
+        return res;
+    }
