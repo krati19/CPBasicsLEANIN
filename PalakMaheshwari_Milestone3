@@ -1,0 +1,255 @@
+*******************MILESTONE -3**************************
+
+
+QUESTION - 1 https://leetcode.com/problems/reorder-list/
+class Solution {
+public:
+    void reorderList(ListNode* head) {
+        if(!head || !head->next) return;
+        
+        ListNode *s = head, *f = head;
+        while(f && f->next){
+            s = s->next;
+            f = f->next->next;
+        }
+        ListNode *prev = nullptr, *curr = s, *tmp;
+        while(curr){
+            tmp = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = tmp;
+        }
+        
+        ListNode *n1 = head, *n2 = prev;
+        while(n2->next){
+            tmp = n1->next;
+            n1->next = n2;
+            n1 = tmp;
+            
+            tmp = n2->next;
+            n2->next = n1;
+            n2 = tmp;
+        }
+    }
+};
+Runtime: 40ms   Memory:17.8 MB
+
+
+--------------------------------------------------------------------------------------------------------------------------
+
+QUESTION 2 https://leetcode.com/problems/min-stack/
+
+class MinStack {
+public:
+    int stack[10000];
+    int min[10000];
+    int topPtr;
+    int minPtr;
+    MinStack() {
+        
+        topPtr = -1;
+        minPtr = -1;
+    }
+    
+    void push(int val) {
+        if(topPtr >= 10000)
+            return;
+        
+        stack[++topPtr] = val;
+        
+        if(minPtr >= 0)
+        {
+            if(min[minPtr] > val)
+                min[++minPtr] = val;
+            else
+            {
+                min[minPtr+1] = min[minPtr];
+                minPtr += 1;
+            }
+        }
+        else
+            min[++minPtr] = val;
+                
+        
+    }
+    
+    void pop() {
+        if(topPtr < 0)      //Underflow
+            return;
+        
+        topPtr -= 1;
+        minPtr -= 1;
+    }
+    
+    int top() {
+        return stack[topPtr];
+    }
+    
+    int getMin() {
+        return min[minPtr];
+    }
+};
+Runtime:20 ms	        Memory:17.2 MB
+
+-------------------------------------------------------------------------------------------------------------------
+
+Question 3 https://leetcode.com/problems/implement-stack-using-queues
+
+class MyStack {
+
+public:
+    queue<int> q;
+    queue<int> q2;
+MyStack() {
+
+}
+
+void push(int x) {
+    q2.push(x);
+    while(!q.empty()){
+        q2.push(q.front());
+        q.pop();
+    }
+    queue<int> temp = q;
+    q=q2;
+    q2=temp;
+}
+
+int pop() {
+    int temp = q.front();
+    q.pop();
+    return temp;
+}
+
+int top() {
+    return q.front();
+}
+
+bool empty() {
+    if(q.empty())
+        return true;
+    return false;
+}
+};
+Runtime:0 ms	        Memory:6.9 MB
+
+----------------------------------------------------------------------------------------------------------
+
+QUESTION 4 https://leetcode.com/problems/implement-queue-using-stacks
+
+class MyQueue {
+public:
+    stack<int> st1;
+    stack<int> st2;
+    MyQueue() {
+        
+    }
+    
+    void push(int x) {
+	//put all the elements of st2 in st1
+        while(!st2.empty()){
+            int t=st2.top();
+            st2.pop();
+            st1.push(t);
+        }
+		// then push the element x
+        st1.push(x);
+		// then put all the elements of st1 in st2
+        while(!st1.empty()){
+            int t=st1.top();
+            st1.pop();
+            st2.push(t);
+        }
+        
+    }
+    
+    int pop() {
+        int t=st2.top();
+        st2.pop();
+        return t;
+    }
+    
+    int peek() {
+        return st2.top();
+    }
+    
+    bool empty() {
+        return st2.empty();
+    }
+};
+Runtime:0 ms	        Memory:7.1 MB
+
+----------------------------------------------------------------------------------------------------------
+
+Question 5 https://leetcode.com/problems/merge-two-sorted-lists
+
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        ListNode *r = new ListNode(0);
+        ListNode *t1 = l1;
+        ListNode *t2 = l2;
+        ListNode *result = r;
+        if(l1==NULL){
+            return l2;
+        }
+        if(l2==NULL){
+            return l1;
+        }
+        while(t1!=NULL && t2!=NULL){
+            if(t1->val<=t2->val) {
+                result->next = t1;
+                t1 = t1->next;
+                result = result->next;
+                }
+            
+            else{
+                result->next = t2;
+                t2 = t2->next;
+                result = result->next;
+            } 
+        }
+		//below loops to check if any element remains in either of the list
+        while(t2!=NULL){
+            result->next = t2;
+            t2 = t2->next;
+            result = result->next;
+        }
+        while(t1!=NULL){
+            result->next = t1;
+            t1 = t1->next;
+            result = result->next;
+        }
+
+        return r->next;
+    }
+};
+
+Runtime:12 ms	        Memory:14.8 MB
+
+----------------------------------------------------------------------------------------------------------
+
+QUESTION 6 https://leetcode.com/problems/linked-list-cycle
+
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        if(head==NULL)return false;
+        
+        ListNode* s=head;
+        ListNode* f=head;
+        
+        do{
+            f=f->next;
+            if(f!=NULL){
+                s=s->next;
+                f=f->next;
+            }
+        }while(f!=NULL && f!=s);
+        
+        if(f==s)return true;
+        return false;
+    }
+};
+Runtime:12 ms	        Memory:8 MB
+
